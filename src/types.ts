@@ -1,0 +1,1 @@
+export type GameScreen = "home" | "game" | "leaderboard" | "gameover";
