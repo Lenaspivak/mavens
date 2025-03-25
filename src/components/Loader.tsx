@@ -1,4 +1,4 @@
-import {LoaderWrapper, Spinner, Feedback} from "../styles/LoaderStyles.ts";
+import {LoaderWrapper, LoadingDots, Feedback} from "../styles/LoaderStyles.ts";
 
 type LoaderProps = {
     message: string;
@@ -10,7 +10,7 @@ const Loader = ({message, loading}: LoaderProps) => {
         <LoaderWrapper>
             {loading && (
                 <>
-                    <Spinner/>
+                    <LoadingDots/>
                     <Feedback>{message}</Feedback>
                 </>
             )}

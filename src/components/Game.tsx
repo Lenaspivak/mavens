@@ -1,7 +1,7 @@
-import {useState, useEffect, useRef, useCallback} from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Loader from "./Loader.tsx";
 import type { GameScreen } from "../types";
-import {GameWrapper, Shape, ShapeWrapper} from "../styles/GameStyles.ts";
+import { GameWrapper, GameInnerStyle, Shape, ShapeWrapper, TimeOutBar } from "../styles/GameStyles.ts";
 
 type GameProps = {
     setScreen: React.Dispatch<React.SetStateAction<GameScreen>>;
@@ -9,7 +9,7 @@ type GameProps = {
     username: string | null;
 };
 
-const Game = ({setScreen, setScore}: GameProps) => {
+const Game = ({ setScreen, setScore }: GameProps) => {
     const [gameState, setGameState] = useState("waiting");
     const [position, setPosition] = useState<"left" | "right" | null>(null);
     const [message, setMessage] = useState("");
@@ -21,6 +21,31 @@ const Game = ({setScreen, setScore}: GameProps) => {
         gameStateRef.current = gameState;
     }, [gameState]);
 
+    // Handle early key press detection
+    const handleEarlyPress = () => {
+        if (gameStateRef.current === "waiting") {
+            setMessage("Too Soon!");
+            setGameState("feedback");
+            setTimeout(handleGameOver, 1000);
+        }
+    };
+
+    // Start the reaction window
+    const startReactionWindow = () => {
+        const newPosition = Math.random() < 0.5 ? "left" : "right";
+        setPosition(newPosition);
+        positionRef.current = newPosition;
+        setGameState("showing");
+
+        timeoutRef.current = window.setTimeout(() => {
+            if (gameStateRef.current === "showing") {
+                setMessage("Too Late!");
+                setGameState("feedback");
+                setTimeout(handleGameOver, 1010);
+            }
+        }, 1000);
+    };
+
     useEffect(() => {
         if (gameState === "idle") {
             setGameState("waiting");
@@ -30,22 +55,11 @@ const Game = ({setScreen, setScore}: GameProps) => {
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
             const delay = Math.random() * (5000 - 2000) + 2000;
+            window.addEventListener("keydown", handleEarlyPress);
 
             timeoutRef.current = window.setTimeout(() => {
-                const newPosition = Math.random() < 0.5 ? "left" : "right";
-                setPosition(newPosition);
-                positionRef.current = newPosition; // ✅ Ensure ref is updated immediately
-                setGameState("showing");
-
-                timeoutRef.current = window.setTimeout(() => {
-                    if (gameStateRef.current === "showing") {
-                        setMessage("Too Late!");
-                        setGameState("feedback");
-                        setTimeout(() => {
-                            handleGameOver();
-                        }, 1000);
-                    }
-                }, 1000);
+                window.removeEventListener("keydown", handleEarlyPress);
+                startReactionWindow();
             }, delay);
         }
 
@@ -62,18 +76,16 @@ const Game = ({setScreen, setScore}: GameProps) => {
     const handleKeyPress = useCallback((event: KeyboardEvent) => {
         if (gameState !== "showing" || positionRef.current === null) return;
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        console.log("Pressed:", event.key, "Position:", positionRef.current);
+
         if ((event.key === "a" && positionRef.current === "left") || (event.key === "d" && positionRef.current === "right")) {
             setMessage("Correct!");
-            setScore(prev => prev + 10);
-            setPosition(null); // Reset immediately
+            setScore((prev) => prev + 10);
+            setPosition(null);
             setGameState("waiting");
         } else {
             setMessage("Wrong key!");
             setGameState("feedback");
-            setTimeout(() => {
-                handleGameOver();
-            }, 1000);
+            setTimeout(handleGameOver, 2010);
         }
     }, [gameState]);
 
@@ -90,8 +102,8 @@ const Game = ({setScreen, setScore}: GameProps) => {
             try {
                 const response = await fetch("https://quicktap-backend-219181450324.us-central1.run.app/api/saveScore", {
                     method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({userId, score: currentScore}),
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId, score: currentScore }),
                 });
                 const result = await response.json();
                 console.log("Score saved:", result);
@@ -109,10 +121,18 @@ const Game = ({setScreen, setScore}: GameProps) => {
         <GameWrapper>
             <h1>{gameState === "waiting" ? "" : ""}</h1>
             {gameState === "showing" && (
-                <ShapeWrapper style={{justifyContent: position === "left" ? "left" : "right"}}><Shape/></ShapeWrapper>
+                <GameInnerStyle>
+                    <TimeOutBar>
+                        <div />
+                    </TimeOutBar>
+                    <ShapeWrapper style={{ justifyContent: position === "left" ? "left" : "right" }}>
+                        <Shape />
+                    </ShapeWrapper>
+                </GameInnerStyle>
             )}
-            <Loader message={message} loading={gameState === "waiting" || gameState === "feedback"}/>
+            <Loader message={message} loading={gameState === "waiting" || gameState === "feedback"} />
         </GameWrapper>
     );
 };
+
 export default Game;
