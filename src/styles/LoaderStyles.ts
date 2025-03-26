@@ -1,10 +1,13 @@
 import styled, {keyframes} from "styled-components";
 
-export const dots = keyframes`
-    33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
-    50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
-    66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
-`
+export const run = keyframes`
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 200% 50%;
+    }
+`;
 
 export const LoaderWrapper = styled.div`
     height: 80px;
@@ -15,27 +18,39 @@ export const LoaderWrapper = styled.div`
     gap: 20px;
 `;
 
-export const LoadingDots = styled.div`
-    width: 60px;
-    aspect-ratio: 4;
-    --_g: no-repeat radial-gradient(circle closest-side,#8CD9DA 90%,#0000);
-    background:
-            no-repeat radial-gradient(circle closest-side, #E6D4DC 90%, #0000) 0%   50%,
-            no-repeat radial-gradient(circle closest-side, #8CD9DA 90%, #0000) 50%  50%,
-            no-repeat radial-gradient(circle closest-side, #E6D4DC 90%, #0000) 100% 50%;
-    background-size: calc(100%/3) 100%;
-    animation: ${dots} 1s infinite linear;
-    
+export const Spinner = styled.div`
+    border: 3px solid white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 20px;
+    width: 70%;
+    background: linear-gradient(90deg, #E6D4DC, #8CD9DA, #E6D4DC);
+    background-size: 200% 100%;
+    background-repeat: repeat;
+    animation: ${run} 1.5s linear reverse infinite;
 `;
 
 export const Feedback = styled.div`
-    position: absolute;
-    bottom: 10px;
-    width: 50%;
-    background-color: #fff;
-    text-align: center;
-    font-size: 20px;
-    padding: 10px 20px;
     font-weight: 500;
+    font-size: 14px;
+    position: absolute;
+    bottom: 20px;
+    background-color: white;
+    border: 1px solid #BCBDBB;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.14);
+    border-radius: 12px;
+    padding: 11px 20px;
+    min-width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
 
+    &.feedback-correct {
+        color: #30A66D;
+    }
+
+    &.feedback-wrong {
+        color: #F04747;
+    }
 `;

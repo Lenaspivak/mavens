@@ -10,6 +10,7 @@ import {
 } from "../styles/GameOverStyles.ts"
 
 import type {GameScreen} from "../types";
+import ArrowIcon from "../assets/ArrowIcon.tsx";
 
 type GameOverProps = {
     username: string | null;
@@ -27,8 +28,8 @@ const GameOver = ({username, score, onRestart, setScreen}: GameOverProps) => {
                     <Title>Game Over</Title>
                     <FinalScore>Your Score: {score}</FinalScore>
                     <ButtonsWrapper>
-                        <AgainButton onClick={onRestart}>Play Again</AgainButton>
-                        <LeaderButton onClick={() => setScreen("leaderboard")}>LeaderBoard</LeaderButton>
+                        <LeaderButton onClick={() => setScreen("leaderboard")}>Highscore</LeaderButton>
+                        <AgainButton onClick={onRestart}><ArrowIcon/>Restart game</AgainButton>
                     </ButtonsWrapper>
                 </div>
             </ContentGameOver>

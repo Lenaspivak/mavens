@@ -1,17 +1,32 @@
-import {LoaderWrapper, LoadingDots, Feedback} from "../styles/LoaderStyles.ts";
+import {LoaderWrapper, Spinner, Feedback} from "../styles/LoaderStyles.ts";
+import CorrectIcon from "../assets/CorrectIcon";
+import WrongIcon from "../assets/WrongIcon";
 
 type LoaderProps = {
     message: string;
     loading: boolean;
+    status?: "correct" | "wrong" | null;
 };
 
-const Loader = ({message, loading}: LoaderProps) => {
+
+const Loader = ({message, loading, status}: LoaderProps) => {
+    const Icon =
+        status === "correct"
+            ? <CorrectIcon />
+            : status === "wrong"
+                ? <WrongIcon />
+                : null;
     return (
         <LoaderWrapper>
             {loading && (
                 <>
-                    <LoadingDots/>
-                    <Feedback>{message}</Feedback>
+                    <Spinner />
+                    {message &&
+                        <Feedback className={status ? `feedback-${status}` : ""}>
+                            {Icon}
+                            <span>{message}</span>
+                        </Feedback>
+                    }
                 </>
             )}
         </LoaderWrapper>
@@ -19,4 +34,3 @@ const Loader = ({message, loading}: LoaderProps) => {
 };
 
 export default Loader;
-

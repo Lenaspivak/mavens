@@ -15,11 +15,6 @@ export const GameWrapper = styled.div`
     border: 1px solid #BCBDBB;
     position: relative;
 `
-export const GameInnerStyle = styled.div`
-display: flex;
-flex-direction: column;
-    justify-content: space-around;
-gap: 100px`
 export const ShapeWrapper = styled.div`
     display: flex;
     width: 60%;
@@ -37,20 +32,17 @@ const shrink = keyframes`
   to { width: 100%; }
 `;
 
-export const TimeOutBar = styled.div`
-    border: 3px solid white;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+export const GameLoader = styled.div`
     height: 20px;
-    width: 90%;
+    width: 60%;
     margin: 10px auto;
     background-color: #ddd;
+    border-radius: 4px;
     overflow: hidden;
 
     & > div {
         height: 100%;
-        background: #8CD9DA;
-        border-radius: 20px;
-        animation: ${shrink} 1.10s linear forwards;
+        background: linear-gradient(90deg, #E6D4DC, #8CD9DA, #E6D4DC);
+        animation: ${shrink} 1s linear forwards;
     }
 `;
