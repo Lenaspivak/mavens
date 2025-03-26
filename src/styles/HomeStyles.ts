@@ -69,3 +69,8 @@ export const MainTitle = styled.h1`
     margin-bottom: 40px;
     font-family: ${({theme}) => theme.fonts.main || "Arial, sans-serif"};
 `;
+
+export const Instruction = styled.div`
+    font-size: 16px;
+    margin-top: 20px;
+`

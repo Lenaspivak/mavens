@@ -36,7 +36,7 @@ export const Feedback = styled.div`
     width: 50%;
     background-color: #fff;
     text-align: center;
-    font-size: 14px;
+    font-size: 20px;
     padding: 10px 20px;
     font-weight: 500;
 
