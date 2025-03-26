@@ -23,7 +23,7 @@ const Home = ({setScreen, setUsername}: HomeProps) => {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username: name }), // ✅ send the username
+            body: JSON.stringify({ username: name }),
         });
 
         const data = await response.json();
@@ -31,7 +31,7 @@ const Home = ({setScreen, setUsername}: HomeProps) => {
 
         if (data.userId) {
             localStorage.setItem("userId", data.userId);
-            localStorage.setItem("username", name); // Optional, for display
+            localStorage.setItem("username", name);
             setUsername(name);
             setScreen("game");
         } else {

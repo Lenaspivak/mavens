@@ -31,7 +31,6 @@ function formatRank(n: number): string {
 const Leaderboard = ({setScreen}: LeaderboardProps) => {
     const [users, setUsers] = useState<LeaderboardUser[]>([]);
     const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
@@ -42,7 +41,7 @@ const Leaderboard = ({setScreen}: LeaderboardProps) => {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log("API Response:", data);  // ✅ Check API response in console
+                console.log("API Response:", data);
 
                 if (data.leaderboards && Array.isArray(data.leaderboards)) {
                     setUsers(data.leaderboards);
